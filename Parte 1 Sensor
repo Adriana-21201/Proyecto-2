@@ -1,48 +1,34 @@
 #include <Arduino.h>
 
 //Pines para la lectura del ADC y el botón
-#define pinADC 33 
+#define pinADC 34 
 #define ADC_VREF_mV 3300.0
 #define ADC_RESOLUTION 4096.0
 
 int estadoBtn = 0; //estado inicial del botón
 int estadoFinal = 0; //estado final del botón
-int adcRaw = 0; //valor "crudo" del ADC
-int lecturas = 0; //valor leído del botón
-int estadoPrevio = HIGH; //Estado previo del botón antes de accionarse
-
-unsigned long reboteFinal = 0;
-unsigned long reboteAtrasado = 50; //tiempo de rebote en millis
+int adcRaw = 0; 
 
 void setup() {
   Serial.begin(115200);
-  pinMode(btnTemp, INPUT);
-  digitalWrite(btnTemp, HIGH); //habilita la resistencia pull-up interna del botón 
-  adcRaw = 0; //inicialización de la variable adcRaw
+  Serial2.begin(115200);
 
 }
 
 void loop() {
-  int leerTemp = digitalRead(btnTemp); //lee el estado del botón
+  if(Serial2.available() > 0) {
+    char pato = Serial2.read();
+    if(pato == 'M') {
+      int adcVal = analogRead(pinADC);
+      float milliVolt = adcVal * (ADC_VREF_mV / ADC_RESOLUTION);
+      float temp = milliVolt / 5;
+      Serial.print("Temperatura: "); //muestra la temperatura leída 
+      Serial.print(temp);
+      Serial.println(" °C"); //sistema en Celsius
 
-  if (leerTemp != estadoPrevio) {
-    reboteFinal = millis(); //actualiza el tiempo de rebote si el estado inicial cambia
-  }
-
-  if ((millis() - reboteFinal) > reboteAtrasado) {
-    if (leerTemp != lecturas) { //comprobar si el estado del botón cambió
-      lecturas = leerTemp; //actualiza el valor de la temperatura por cada rebote
-      if (lecturas == LOW) {
-        //se escogen valores aleatorios entre -20 y 120 grados °C para la temperatura
-        int adcVal = analogRead(pinADC);
-        float milliVolt = adcVal * (ADC_VREF_mV / ADC_RESOLUTION);
-        float temp = milliVolt / 5;
-        Serial.print("Temperatura: "); //muestra la temperatura leída 
-        Serial.print(temp);
-        Serial.println(" °C"); //sistema en Celsius
-      }
+      char tempData[8];
+      dtostrf(temp, 4, 2, tempData);
+      Serial2.print(tempData);
     }
-  }
-
-  estadoPrevio = leerTemp;
+  }      
 }
