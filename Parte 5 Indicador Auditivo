@@ -1,1 +1,23 @@
+#define pinBocina PF_3
 
+void setup() {
+  pinMode(pinBocina, OUTPUT);
+}
+
+void loop() {
+
+if(guardar == LOW) {
+    tone(pinBocina, 740, 250);
+    tone(pinBocina, 830, 250);
+    tone(pinBocina, 880, 250);
+}
+
+  tone(pinBocina, 349, 250);
+  tone(pinBocina, 261, 250);
+  tone(pinBocina, 294, 250);
+  tone(pinBocina, 329, 250);
+  tone(pinBocina, 349, 250);
+  tone(pinBocina, 391, 250);
+
+  delay(5);
+}
