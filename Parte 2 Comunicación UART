@@ -66,5 +66,8 @@ void loop() {
 
   String texto2 = "actual es de: ";
   LCD_Print(texto1, 10, 150, 2, 0xffff, 0x00);
+
+  String texto3 = tempThng;
+  LCD_Print(texto3, 10, 190, 2, oxffff, 0x00);
 }
 
