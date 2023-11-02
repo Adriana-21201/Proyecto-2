@@ -2,7 +2,6 @@
 
 //Pines para la lectura del ADC y el botón
 #define pinADC 33 
-#define btnTemp 13
 #define ADC_VREF_mV 3300.0
 #define ADC_RESOLUTION 4096.0
 
