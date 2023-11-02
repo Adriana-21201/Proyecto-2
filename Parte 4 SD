@@ -1,1 +1,43 @@
+#include <SPI.h>
+#include <SD.h>
 
+File archive;
+
+#define MISO PA_4
+#define MOSI PA_5
+#define CS PA_3
+#define SCK PA_2
+
+void setup() {
+   SPI.setModule(0);
+
+  Serial.print("Inicializando SD...");
+  //pinMode(10, OUTPUT);
+
+  if(!SD.begin(CS)) {
+    Serial.println("Inicialización fallida");
+    return;
+  }
+
+  Serial.println("Inicialización exitosa");
+  archive = SD.open("temp.txt", FILE_WRITE);
+
+  if(archive) {
+    Serial.print("Esperando a que se guarde...");
+    archive.println("Probando 1, 2, 3");
+    archive.close();
+    Serial.println("Hubo un error");
+  }
+
+  archive = SD.open("temp.txt");
+  if(archive) {
+    Serial.println("temp.txt");
+    while(archive.available()) {
+      Serial.write(archive.read());
+    }
+
+    archive.close();
+  } else {
+    Serial.println("Error al abrir archivo");
+  }
+}
