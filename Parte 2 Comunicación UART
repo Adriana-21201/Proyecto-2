@@ -3,13 +3,13 @@
 #include <Arduino.h>
 
 //Pines para la lectura del ADC y el botón
-#define pinADC 33 
-#define ADC_VREF_mV 3300.0
-#define ADC_RESOLUTION 4096.0
+#define pinADC 34 //Pin del sensor de temperatura LM35
+#define ADC_VREF_mV 3300.0 //Voltaje de referencia de 3.3 V
+#define ADC_RESOLUTION 4096.0 //Resolución del ADC para conversión de la temperatura
 
 int estadoBtn = 0; //estado inicial del botón
 int estadoFinal = 0; //estado final del botón
-int adcRaw = 0; 
+int adcRaw = 0; //valor crudo del ADC
 
 void setup() {
   Serial.begin(115200);
@@ -19,10 +19,10 @@ void setup() {
 
 void loop() {
   if(Serial2.available() > 0) {
-    char pato = Serial2.read();
+    char pato = Serial2.read(); //Caracter para que se lea el valor de la temperatura
     if(pato == 'M') {
       int adcVal = analogRead(pinADC);
-      float milliVolt = adcVal * (ADC_VREF_mV / ADC_RESOLUTION);
+      float milliVolt = adcVal * (ADC_VREF_mV / ADC_RESOLUTION); //Conversión del voltaje a temperatura
       float temp = milliVolt / 5;
       Serial.print("Temperatura: "); //muestra la temperatura leída 
       Serial.print(temp);
@@ -30,7 +30,7 @@ void loop() {
 
       char tempData[8];
       dtostrf(temp, 4, 2, tempData);
-      Serial2.print(tempData);
+      Serial2.print(tempData); //Despliega el valor de la temperatura en el monitor serial. 
     }
   }      
 }
